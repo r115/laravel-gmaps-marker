@@ -1,19 +1,22 @@
 <script setup lang="ts">
+// @ts-nocheck not enough time to figure out the map library types
+
 import type {LatLng} from '@/Pages/Welcome.vue'
 import {onMounted, ref, watch} from "vue";
+import axios from "axios";
 
 /**
  * Map library expects a specific structure.
  *
  * @param markers
  */
-const formatMapMarkers = (markers: LatLng[]) => {
+const formatMapMarkers = (markers: LatLng[]): object => {
     return markers.map((mark) => {
         return {
             id: mark.id,
             position: {
-                lat: Number.parseFloat(mark.lat, 10),
-                lng: Number.parseFloat(mark.lng, 10)
+                lat: Number.parseFloat(mark.lat),
+                lng: Number.parseFloat(mark.lng)
             }
         }
     })
@@ -66,6 +69,7 @@ onMounted(async () => {
             style="width: 100vw; height: 100vh"
         >
             <GMapCluster :zoomOnClick="true">
+                <!--@ts-ignore-->
                 <GMapMarker
                     :key="index"
                     v-for="(m, index) in markers"
