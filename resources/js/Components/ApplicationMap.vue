@@ -1,13 +1,12 @@
 <template>
     <div>
-        <div>Map hererer</div>
         <GMapMap
             :center="center"
             :zoom="10"
             :click="true"
             @click="greet"
             map-type-id="terrain"
-            style="width: 100vw; height: 20rem"
+            style="width: 100vw; height: 100vh"
         >
             <GMapCluster :zoomOnClick="true">
                 <GMapMarker
