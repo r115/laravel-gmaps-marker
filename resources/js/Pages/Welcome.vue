@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
+import ApplicationMap from '@/Components/ApplicationMap.vue';
 
 defineProps<{
     canLogin?: boolean;
@@ -16,6 +17,7 @@ defineProps<{
         class="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white"
     >
         <div class="max-w-7xl mx-auto p-6 lg:p-8">
+            <ApplicationMap/>
             <div class="flex justify-center">
                 <svg
                     viewBox="0 0 62 65"
