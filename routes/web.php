@@ -16,5 +16,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index']);
 Route::post('/markers', [HomeController::class, 'insert_post_markers']);
+Route::get('/markers', [HomeController::class, 'get_markers']);
 
 

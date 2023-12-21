@@ -24,6 +24,15 @@ class HomeController extends Controller
             'markers' => $markers
         ]);
     }
+    public function get_markers(): JsonResponse{
+        $markers = DB::table('markers')
+            ->select(DB::raw('id, st_y(coordinates::geometry) as lat, st_x(coordinates::geometry) as lng'))
+            ->offset(0)
+            ->limit(25)
+            ->get();
+
+        return response()->json(["markers" => $markers]);
+    }
 
     public function insert_post_markers(Request $request): JsonResponse
     {
