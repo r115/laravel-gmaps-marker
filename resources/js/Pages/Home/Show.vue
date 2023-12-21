@@ -1,16 +1,17 @@
 <script setup>
-// import Layout from './Layout'
-// import { Head } from '@inertiajs/vue3'
+import Map from './Map.vue'
+import Layout from '../../Layouts/Layout.vue'
+import { Head } from '@inertiajs/vue3'
 
 defineProps({ user: Object })
 </script>
 
 <template>
-<!--    <Layout>-->
-    <div>
-        <Head title="Welcome" />
-        <h1>Welcome</h1>
-        <p>App goes here!</p>
+    <Layout>
+    <div class="min-h-screen">
+        <div>vhghgh</div>
+        <Head title="Map Markers On A Field Of Laravel" />
+<!--        <Map/>-->
     </div>
-<!--    </Layout>-->
+    </Layout>
 </template>
