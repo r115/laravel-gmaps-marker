@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('markers', function (Blueprint $table) {
             $table->id();
             $table->text('name')->nullable();
+            $table->point('coordinates');
             $table->timestamps();
         });
     }
