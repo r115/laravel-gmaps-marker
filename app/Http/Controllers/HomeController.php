@@ -13,16 +13,7 @@ class HomeController extends Controller
 {
     public function index(): Response
     {
-        // @todo work with eloquent. casts are a little bit finicky for postgis columns
-        $markers = DB::table('markers')
-            ->select(DB::raw('id, st_y(coordinates::geometry) as lat, st_x(coordinates::geometry) as lng'))
-            ->offset(0)
-            ->limit(25)
-            ->get();
-
-        return Inertia::render('Welcome', [
-            'markers' => $markers
-        ]);
+        return Inertia::render('Welcome', []);
     }
     public function get_markers(): JsonResponse{
         $markers = DB::table('markers')

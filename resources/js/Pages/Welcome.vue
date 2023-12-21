@@ -39,6 +39,6 @@ const props = defineProps<{
             </div>
         </div>
 
-        <ApplicationMap :markers="props.markers" :is-map-clickable="isMapClickable"/>
+        <ApplicationMap :is-map-clickable="isMapClickable"/>
     </div>
 </template>

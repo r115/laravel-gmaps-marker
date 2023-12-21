@@ -1,29 +1,12 @@
-<template>
-    <div>
-        <GMapMap
-            :center="center"
-            :zoom="10"
-            @click="addMarkerToMap"
-            map-type-id="terrain"
-            style="width: 100vw; height: 100vh"
-        >
-            <GMapCluster :zoomOnClick="true">
-                <GMapMarker
-                    :key="index"
-                    v-for="(m, index) in mergedMarkers()"
-                    :position="m.position"
-                    :clickable="true"
-                    :draggable="true"
-                    @click="center = m.position"
-                />
-            </GMapCluster>
-        </GMapMap>
-    </div>
-
-</template>
-
 <script setup lang="ts">
 import type {LatLng} from '@/Pages/Welcome.vue'
+import {onMounted, ref, watch} from "vue";
+
+/**
+ * Map library expects a specific structure.
+ *
+ * @param markers
+ */
 const formatMapMarkers = (markers: LatLng[]) => {
     return markers.map((mark) => {
         return {
@@ -36,48 +19,62 @@ const formatMapMarkers = (markers: LatLng[]) => {
     })
 }
 
-const {markers, isMapClickable} = defineProps<{
-    markers: LatLng[],
+const {isMapClickable} = defineProps<{
     isMapClickable: string
 }>()
 
-const _markers: LatLng[] = formatMapMarkers(markers)
-let _new_markers: LatLng[] = []
-
-
+const isSubmitting = ref(false)
+const markers = ref([])
 
 const  center = { lat: 52.093048, lng: -1.84212 }
 
 const addMarkerToMap = async (event) =>  {
-    console.log(isMapClickable);
+    isSubmitting.value = true;
 
     if(isMapClickable === "yes") {
         await axios.post('/markers', {
             latitude: event.latLng.lat().toPrecision(8),
             longitude: event.latLng.lng().toPrecision(8)
         });
-
-        const reloadedMarkers = await axios.get('/markers');
-
-        console.log(reloadedMarkers.data)
-        _new_markers=formatMapMarkers(reloadedMarkers.data.markers)
-
-        console.log('markers', _markers)
-        mergedMarkers()
     }
+
+    isSubmitting.value = false;
+}
+const fetchMarkers = async () => {
+    const markersData = await axios.get('/markers');
+
+    markers.value = formatMapMarkers(markersData.data.markers)
 }
 
-const mergedMarkers = () => {
-    const mix = [..._new_markers,..._markers];
+watch(isSubmitting,async () => {
+   await fetchMarkers();
+})
 
-    console.log(mix)
-
-        const unique = [
-            ...new Map(mix.map((item) => [item["id"], item])).values(),
-        ];
-
-    console.log(unique)
-    return unique
-}
+onMounted(async () => {
+    await fetchMarkers();
+})
 
 </script>
+
+<template>
+    <div>
+        <GMapMap
+            :center="center"
+            :zoom="10"
+            @click="addMarkerToMap"
+            map-type-id="terrain"
+            style="width: 100vw; height: 100vh"
+        >
+            <GMapCluster :zoomOnClick="true">
+                <GMapMarker
+                    :key="index"
+                    v-for="(m, index) in markers"
+                    :position="m.position"
+                    :clickable="true"
+                    :draggable="true"
+                    @click="center = m.position"
+                />
+            </GMapCluster>
+        </GMapMap>
+    </div>
+</template>
