@@ -8,47 +8,26 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
-use function Pest\Laravel\json;
 
 class HomeController extends Controller
 {
     public function index(): Response
     {
-//        return Inertia::render('Home/Show', [
-//            'points' => [],
-//        ]);
-        $marks = DB::table('markers')
+        // @todo work with eloquent. casts are a little bit finicky for postgis columns
+        $markers = DB::table('markers')
             ->select(DB::raw('id, st_y(coordinates::geometry) as lat, st_x(coordinates::geometry) as lng'))
             ->offset(0)
             ->limit(25)
             ->get();
 
-        dump($marks->toArray());
-
-        //format for vue maps
-//        $formatted_marks = [];
-//
-//        foreach ($marks as $mark) {
-//            $formatted_marks[] = [
-//                "id" =>$mark["id"],
-//                'position' => [
-//                    "lat" => $mark["lat"],
-//                    "lng" => $mark["lng"]
-//                ]
-//            ];
-//        }
-//            Marker::select([
-//            'name' => 'hhh',
-//            'coordinates' => DB::raw("ST_GeogFromText('SRID=4326;POINT($longitude $latitude)')") //'($longitude $latitude)'
-//        ]);
-
         return Inertia::render('Welcome', [
-            'markers' => $marks
+            'markers' => $markers
         ]);
     }
 
-    public function insert_post_markers(Request $request): JsonResponse {
-        $validated = $request->validate([
+    public function insert_post_markers(Request $request): JsonResponse
+    {
+        $request->validate([
             'longitude' => [
                 'bail',
                 'required',
@@ -63,23 +42,11 @@ class HomeController extends Controller
         $longitude = $request->input('longitude');
         $latitude = $request->input('latitude');
 
-        $raw_query = "ST_GeogFromText('SRID=4326;POINT($longitude $latitude)')";
-
-        dump($raw_query);
-        dump($request->input('longitude'));
-
         $mark = Marker::create([
             'name' => 'hhh',
-            'coordinates' => DB::raw("ST_GeogFromText('SRID=4326;POINT($longitude $latitude)')") //'($longitude $latitude)'
+            'coordinates' => DB::raw("ST_GeogFromText('SRID=4326;POINT($longitude $latitude)')")
         ]);
 
-        // SELECT name, st_y(coordinates::geometry) as lat, st_x(coordinates::geometry) as long FROM public.markers
-        //ORDER BY id ASC LIMIT 100
-
-//        DB::table('markers')->insert([
-//            'coordinates' => DB::raw("ST_GeogFromText('SRID=4326;POINT($longitude $latitude)')")
-//        ]);
-
-        return response()->json(['data' => $request->all()]);
+        return response()->json(['data' => $mark]);
     }
 }

@@ -17,7 +17,7 @@ createInertiaApp({
             .use(plugin)
             .use(VueGoogleMaps, {
             load: {
-                key: 'AIzaSyC5IxlPtQutgDlu_xmqrC_BStMJIsu2q8s',
+                key: '',
             },
         })
             .use(ZiggyVue)
