@@ -20,6 +20,7 @@ class HomeController extends Controller
             ->select(DB::raw('id, st_y(coordinates::geometry) as lat, st_x(coordinates::geometry) as lng'))
             ->offset(0)
             ->limit(25)
+            ->latest()
             ->get();
 
         return response()->json(["markers" => $markers]);
